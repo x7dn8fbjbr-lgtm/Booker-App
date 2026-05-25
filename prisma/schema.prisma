@@ -1,0 +1,268 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Auth (next-auth v4) ─────────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  // TODO(offene-frage-1): orgId für Multi-User-Zugang ergänzen
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Artists ────────────────────────────────────────────────────────────────
+
+model Artist {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  website   String?
+  rating    Int?
+  notes     Note[]
+  projects  Project[]
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([name])
+}
+
+model Project {
+  id          String     @id @default(cuid())
+  artistId    String
+  artist      Artist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  name        String
+  genre       String?
+  lineup      String?
+  description String?    @db.Text
+  rating      Int?
+  documents   Document[]
+  bookings    Booking[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([artistId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+// ─── Venues ──────────────────────────────────────────────────────────────────
+
+model Venue {
+  id          String          @id @default(cuid())
+  name        String
+  street      String?
+  city        String
+  zip         String?
+  capacity    Int?
+  stageSizeM2 Float?
+  type        VenueType       @default(SONSTIGE)
+  genreTags   String[]
+  contacts    ContactPerson[]
+  bookings    Booking[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([city])
+  @@index([name])
+}
+
+model ContactPerson {
+  id      String  @id @default(cuid())
+  venueId String
+  venue   Venue   @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  name    String
+  email   String?
+  phone   String?
+  role    String?
+}
+
+// ─── Bookings ─────────────────────────────────────────────────────────────────
+
+model Booking {
+  id             String             @id @default(cuid())
+  artistId       String
+  artist         Artist             @relation(fields: [artistId], references: [id])
+  projectId      String?
+  project        Project?           @relation(fields: [projectId], references: [id])
+  venueId        String
+  venue          Venue              @relation(fields: [venueId], references: [id])
+  date           DateTime
+  status         BookingStatus      @default(ERSTKONTAKT)
+  negotiation    NegotiationDetail?
+  communications CommunicationLog[]
+  documents      Document[]
+  tourId         String?
+  tour           Tour?              @relation(fields: [tourId], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([artistId])
+  @@index([venueId])
+  @@index([status])
+  @@index([date])
+}
+
+model NegotiationDetail {
+  id            String   @id @default(cuid())
+  bookingId     String   @unique
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fee           Float?
+  currency      String   @default("EUR")
+  travelCosts   Float?
+  accommodation Float?
+  notes         String?  @db.Text
+  updatedAt     DateTime @updatedAt
+}
+
+model CommunicationLog {
+  id            String   @id @default(cuid())
+  bookingId     String
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  contactPerson String?
+  body          String   @db.Text
+  attachmentUrl String?
+  createdAt     DateTime @default(now())
+
+  @@index([bookingId])
+}
+
+// ─── Documents ───────────────────────────────────────────────────────────────
+
+model Document {
+  id         String       @id @default(cuid())
+  name       String
+  type       DocumentType
+  storageKey String
+  mimeType   String
+  sizeBytes  Int?
+  version    Int          @default(1)
+  projectId  String?
+  project    Project?     @relation(fields: [projectId], references: [id])
+  bookingId  String?
+  booking    Booking?     @relation(fields: [bookingId], references: [id])
+  createdAt  DateTime     @default(now())
+
+  @@index([projectId])
+  @@index([bookingId])
+}
+
+// ─── Tours & Events ──────────────────────────────────────────────────────────
+
+model Tour {
+  id        String    @id @default(cuid())
+  name      String
+  artistId  String
+  startDate DateTime
+  endDate   DateTime
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Event {
+  id      String   @id @default(cuid())
+  name    String
+  date    DateTime
+  venueId String
+  stages  Stage[]
+  createdAt DateTime @default(now())
+}
+
+model Stage {
+  id      String @id @default(cuid())
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name    String
+  slots   Slot[]
+}
+
+model Slot {
+  id        String   @id @default(cuid())
+  stageId   String
+  stage     Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  startTime DateTime
+  endTime   DateTime
+  artistId  String?
+  projectId String?
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum BookingStatus {
+  ERSTKONTAKT
+  IN_VERHANDLUNG
+  BESTAETIGT
+  ABGESAGT
+}
+
+enum VenueType {
+  CLUB
+  THEATER
+  FESTIVAL
+  OPEN_AIR
+  SONSTIGE
+}
+
+enum DocumentType {
+  TECH_RIDER
+  HOSPITALITY_RIDER
+  STAGE_PLOT
+  PRESSETEXT
+  PRESSEFOTO
+  VERTRAG
+  SONSTIGES
+}
