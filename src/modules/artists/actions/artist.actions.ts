@@ -54,7 +54,7 @@ export async function createArtist(
   formData: FormData
 ): Promise<ArtistFormState> {
   const result = ArtistSchema.safeParse({
-    name: formData.get("name") as string,
+    name: (formData.get("name") as string | null) ?? "",
     email: (formData.get("email") as string) || undefined,
     phone: (formData.get("phone") as string) || undefined,
     website: (formData.get("website") as string) || undefined,
@@ -88,7 +88,7 @@ export async function updateArtist(
   formData: FormData
 ): Promise<ArtistFormState> {
   const result = ArtistSchema.safeParse({
-    name: formData.get("name") as string,
+    name: (formData.get("name") as string | null) ?? "",
     email: (formData.get("email") as string) || undefined,
     phone: (formData.get("phone") as string) || undefined,
     website: (formData.get("website") as string) || undefined,
