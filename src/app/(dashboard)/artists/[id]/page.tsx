@@ -20,6 +20,8 @@ interface Props {
   searchParams: Promise<{ tab?: string }>
 }
 
+// TODO: getArtistById is called twice (here + in the page). For MVP this is
+// acceptable; add React cache() wrapping if this becomes a perf concern.
 export async function generateMetadata({ params }: Props) {
   const { id } = await params
   const artist = await getArtistById(id)

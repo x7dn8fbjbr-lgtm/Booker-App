@@ -20,7 +20,7 @@ export default async function EditArtistPage({ params }: Props) {
   if (!artist) notFound()
 
   const updateArtistWithId = updateArtist.bind(null, id)
-  const deleteArtistWithId = deleteArtist.bind(null, id) as () => Promise<void>
+  const deleteArtistWithId = deleteArtist.bind(null, id)
 
   return (
     <div className="flex flex-col gap-6">
