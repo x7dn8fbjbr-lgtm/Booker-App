@@ -22,7 +22,7 @@ export function LoginForm() {
     setDemoLoading(true);
     setDemoError(null);
 
-    const result = await signIn("Demo-Login", {
+    const result = await signIn("credentials", {
       email: demoEmail,
       password: demoPassword,
       redirect: false,
