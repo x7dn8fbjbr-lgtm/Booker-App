@@ -3,6 +3,9 @@
 
 import { useState, useTransition } from "react"
 import { DndContext, type DragEndEvent } from "@dnd-kit/core"
+import { format } from "date-fns"
+import { de } from "date-fns/locale"
+import { cn } from "@/lib/utils"
 import { createSlot } from "../actions/slot.actions"
 import { ArtistSidebar } from "./ArtistSidebar"
 import { StageGrid } from "./StageGrid"
@@ -15,7 +18,21 @@ interface Props {
   initialSlots: SlotWithBooking[]
 }
 
+function getDayList(startDate: Date, endDate: Date | null): Date[] {
+  const days: Date[] = []
+  const end = endDate ?? startDate
+  const current = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()))
+  const endUTC = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate()))
+  while (current <= endUTC) {
+    days.push(new Date(current))
+    current.setUTCDate(current.getUTCDate() + 1)
+  }
+  return days
+}
+
 export function FestivalPlanner({ event, artists, initialSlots }: Props) {
+  const days = getDayList(new Date(event.date), event.endDate ? new Date(event.endDate) : null)
+  const [selectedDay, setSelectedDay] = useState(0)
   const [slots, setSlots] = useState<SlotWithBooking[]>(initialSlots)
   const [error, setError] = useState<string | null>(null)
   const [, startTransition] = useTransition()
@@ -36,15 +53,15 @@ export function FestivalPlanner({ event, artists, initialSlots }: Props) {
     if (over.data.current?.occupied) return
     if (assignedArtistIds.has(artistId)) return
 
+    // Cell ID format: ${stageId}::${dateStr}::${timeSlot}
     const cellId = over.id as string
-    const separatorIdx = cellId.indexOf("::")
-    if (separatorIdx === -1) return
-    const stageId = cellId.slice(0, separatorIdx)
-    const timeSlot = cellId.slice(separatorIdx + 2)
+    const parts = cellId.split("::")
+    if (parts.length !== 3) return
+    const [stageId, dateStr, timeSlot] = parts
 
     const [h, m] = timeSlot.split(":").map(Number)
-    const startDate = new Date(event.date)
-    startDate.setHours(h, m, 0, 0)
+    const startDate = new Date(`${dateStr}T00:00:00Z`)
+    startDate.setUTCHours(h, m, 0, 0)
     const endDate = new Date(startDate.getTime() + event.gridInterval * 60 * 1000)
 
     const tempId = `temp-${Date.now()}`
@@ -114,12 +131,33 @@ export function FestivalPlanner({ event, artists, initialSlots }: Props) {
           {error}
         </div>
       )}
+
+      {days.length > 1 && (
+        <div className="flex gap-1 mb-4 print:hidden">
+          {days.map((day, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedDay(i)}
+              className={cn(
+                "h-9 px-4 rounded-md text-sm font-medium transition-colors",
+                i === selectedDay
+                  ? "bg-indigo-600 text-white"
+                  : "border border-slate-300 text-slate-700 hover:bg-slate-50"
+              )}
+            >
+              {format(day, "EEE d. MMM", { locale: de })}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="flex gap-4">
         <ArtistSidebar artists={artists} assignedArtistIds={assignedArtistIds} />
         <div className="flex-1 overflow-x-auto">
           <StageGrid
             event={event}
             slots={slots}
+            selectedDate={days[selectedDay]}
             onDeleteSlot={handleDeleteSlot}
             onUpdateSlot={handleUpdateSlot}
           />

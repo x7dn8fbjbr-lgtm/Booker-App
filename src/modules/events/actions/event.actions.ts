@@ -24,6 +24,7 @@ export type EventFormState = {
     name?: string[]
     venueId?: string[]
     date?: string[]
+    endDate?: string[]
     gridInterval?: string[]
     startTime?: string[]
     endTime?: string[]
@@ -39,6 +40,7 @@ const EventSchema = z
     name: z.string().min(1, "Name ist erforderlich"),
     venueId: z.string().min(1, "Venue ist erforderlich"),
     date: z.string().min(1, "Datum ist erforderlich"),
+    endDate: z.string().optional(),
     gridInterval: z.coerce
       .number()
       .refine((v) => [15, 30, 60].includes(v), { message: "Intervall muss 15, 30 oder 60 sein" }),
@@ -48,6 +50,10 @@ const EventSchema = z
   .refine((d) => d.startTime < d.endTime, {
     message: "Endzeit muss nach Startzeit liegen",
     path: ["endTime"],
+  })
+  .refine((d) => !d.endDate || d.endDate >= d.date, {
+    message: "Enddatum muss gleich oder nach dem Startdatum liegen",
+    path: ["endDate"],
   })
 
 const StageInputSchema = z
@@ -95,6 +101,7 @@ export async function createEvent(
     name: formData.get("name"),
     venueId: formData.get("venueId"),
     date: formData.get("date"),
+    endDate: formData.get("endDate") || undefined,
     gridInterval: formData.get("gridInterval"),
     startTime: formData.get("startTime"),
     endTime: formData.get("endTime"),
@@ -115,6 +122,7 @@ export async function createEvent(
         name: result.data.name,
         venueId: result.data.venueId,
         date: new Date(result.data.date),
+        endDate: result.data.endDate ? new Date(result.data.endDate) : null,
         gridInterval: result.data.gridInterval,
         startTime: result.data.startTime,
         endTime: result.data.endTime,
@@ -140,6 +148,7 @@ export async function updateEvent(
     name: formData.get("name"),
     venueId: formData.get("venueId"),
     date: formData.get("date"),
+    endDate: formData.get("endDate") || undefined,
     gridInterval: formData.get("gridInterval"),
     startTime: formData.get("startTime"),
     endTime: formData.get("endTime"),
@@ -153,6 +162,7 @@ export async function updateEvent(
         name: result.data.name,
         venueId: result.data.venueId,
         date: new Date(result.data.date),
+        endDate: result.data.endDate ? new Date(result.data.endDate) : null,
         gridInterval: result.data.gridInterval,
         startTime: result.data.startTime,
         endTime: result.data.endTime,

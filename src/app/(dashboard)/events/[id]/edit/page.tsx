@@ -55,6 +55,7 @@ export default async function EditEventPage({ params }: Props) {
           name: event.name,
           venueId: event.venueId,
           date: format(new Date(event.date), "yyyy-MM-dd"),
+          endDate: event.endDate ? format(new Date(event.endDate), "yyyy-MM-dd") : undefined,
           gridInterval: event.gridInterval,
           startTime: event.startTime,
           endTime: event.endTime,

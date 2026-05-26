@@ -19,6 +19,7 @@ interface Props {
     name?: string
     venueId?: string
     date?: string
+    endDate?: string
     gridInterval?: number
     startTime?: string
     endTime?: string
@@ -96,18 +97,35 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
         </div>
 
         {/* Datum */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="date" className="text-sm font-medium text-slate-700">Datum *</label>
-          <input
-            id="date"
-            type="date"
-            name="date"
-            defaultValue={defaultValues?.date}
-            className={inputCls}
-          />
-          {state.errors?.date && (
-            <p className="text-xs text-red-600">{state.errors.date[0]}</p>
-          )}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="date" className="text-sm font-medium text-slate-700">Startdatum *</label>
+            <input
+              id="date"
+              type="date"
+              name="date"
+              defaultValue={defaultValues?.date}
+              className={inputCls}
+            />
+            {state.errors?.date && (
+              <p className="text-xs text-red-600">{state.errors.date[0]}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="endDate" className="text-sm font-medium text-slate-700">
+              Enddatum <span className="text-slate-400 font-normal">(leer = eintägig)</span>
+            </label>
+            <input
+              id="endDate"
+              type="date"
+              name="endDate"
+              defaultValue={defaultValues?.endDate}
+              className={inputCls}
+            />
+            {state.errors?.endDate && (
+              <p className="text-xs text-red-600">{state.errors.endDate[0]}</p>
+            )}
+          </div>
         </div>
 
         {/* Raster-Einstellungen */}

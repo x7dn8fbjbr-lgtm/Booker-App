@@ -64,30 +64,34 @@ function getSpanCount(slot: SlotWithBooking, intervalMin: number): number {
 interface Props {
   event: EventWithRelations
   slots: SlotWithBooking[]
+  selectedDate: Date
   onDeleteSlot: (slotId: string) => void
   onUpdateSlot: (slotId: string, startISO: string, endISO: string) => void
 }
 
-export function StageGrid({ event, slots, onDeleteSlot, onUpdateSlot }: Props) {
+export function StageGrid({ event, slots, selectedDate, onDeleteSlot, onUpdateSlot }: Props) {
   const timeSlots = generateTimeSlots(event.startTime, event.endTime, event.gridInterval)
+  const dateStr = format(selectedDate, "yyyy-MM-dd")
+
+  const daySlots = slots.filter((s) => format(new Date(s.startTime), "yyyy-MM-dd") === dateStr)
   const conflictIds = findConflictIds(slots)
 
   const coveredCells = new Set<string>()
-  for (const slot of slots) {
+  for (const slot of daySlots) {
     const startStr = format(new Date(slot.startTime), "HH:mm")
     const startIdx = timeSlots.indexOf(startStr)
     const span = getSpanCount(slot, event.gridInterval)
     for (let i = 1; i < span; i++) {
       if (startIdx + i < timeSlots.length) {
-        coveredCells.add(`${slot.stageId}::${timeSlots[startIdx + i]}`)
+        coveredCells.add(`${slot.stageId}::${dateStr}::${timeSlots[startIdx + i]}`)
       }
     }
   }
 
   const slotByCell = new Map<string, SlotWithBooking>()
-  for (const slot of slots) {
+  for (const slot of daySlots) {
     const startStr = format(new Date(slot.startTime), "HH:mm")
-    slotByCell.set(`${slot.stageId}::${startStr}`, slot)
+    slotByCell.set(`${slot.stageId}::${dateStr}::${startStr}`, slot)
   }
 
   return (
@@ -117,7 +121,7 @@ export function StageGrid({ event, slots, onDeleteSlot, onUpdateSlot }: Props) {
                 {timeSlot}
               </td>
               {event.stages.map((stage) => {
-                const cellId = `${stage.id}::${timeSlot}`
+                const cellId = `${stage.id}::${dateStr}::${timeSlot}`
                 if (coveredCells.has(cellId)) return null
 
                 const slot = slotByCell.get(cellId)

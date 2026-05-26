@@ -218,17 +218,18 @@ model Tour {
 }
 
 model Event {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String
   date         DateTime
+  endDate      DateTime?
   venueId      String
-  venue        Venue    @relation(fields: [venueId], references: [id])
-  gridInterval Int      @default(30)
-  startTime    String   @default("14:00")
-  endTime      String   @default("22:00")
+  venue        Venue     @relation(fields: [venueId], references: [id])
+  gridInterval Int       @default(30)
+  startTime    String    @default("14:00")
+  endTime      String    @default("22:00")
   stages       Stage[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([venueId])
   @@index([date])

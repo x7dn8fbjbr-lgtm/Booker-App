@@ -23,8 +23,9 @@ export async function createSlot(params: {
     })
     if (!event) return { success: false, message: "Event nicht gefunden" }
 
-    const eventDate = new Date(event.date)
-    const dayStart = new Date(Date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate()))
+    // Use the slot's own date (not event.date) so multi-day events work correctly
+    const slotDate = new Date(startTimeISO)
+    const dayStart = new Date(Date.UTC(slotDate.getUTCFullYear(), slotDate.getUTCMonth(), slotDate.getUTCDate()))
     const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000)
 
     let booking = await db.booking.findFirst({
