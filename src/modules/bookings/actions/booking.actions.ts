@@ -72,18 +72,23 @@ export async function getBookings(): Promise<BookingWithRelations[]> {
 }
 
 export async function getBookingById(id: string): Promise<BookingDetail | null> {
-  return db.booking.findUnique({
-    where: { id },
-    include: {
-      artist: true,
-      venue: true,
-      project: true,
-      negotiation: true,
-      communications: {
-        orderBy: { createdAt: "desc" },
+  try {
+    return await db.booking.findUnique({
+      where: { id },
+      include: {
+        artist: true,
+        venue: true,
+        project: true,
+        negotiation: true,
+        communications: {
+          orderBy: { createdAt: "desc" },
+        },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error("[getBookingById]", error)
+    throw error
+  }
 }
 
 export async function getProjectsByArtist(artistId: string): Promise<Project[]> {
