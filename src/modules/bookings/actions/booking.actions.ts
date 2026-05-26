@@ -187,3 +187,13 @@ export async function updateBookingStatus(
     return { success: false, message: "Status konnte nicht gespeichert werden." }
   }
 }
+
+export async function updateBookingStatusFormAction(
+  bookingId: string,
+  _prevState: unknown,
+  formData: FormData
+): Promise<void> {
+  const status = formData.get("status") as BookingStatus
+  await db.booking.update({ where: { id: bookingId }, data: { status } })
+  redirect(`/bookings/${bookingId}?tab=uebersicht`)
+}
