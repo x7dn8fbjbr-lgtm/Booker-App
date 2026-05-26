@@ -141,6 +141,7 @@ model Booking {
   venueId        String
   venue          Venue              @relation(fields: [venueId], references: [id])
   date           DateTime
+  contactPerson  String?
   status         BookingStatus      @default(ERSTKONTAKT)
   negotiation    NegotiationDetail?
   communications CommunicationLog[]
@@ -174,6 +175,7 @@ model CommunicationLog {
   booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   contactPerson String?
   body          String   @db.Text
+  tags          String[]
   attachmentUrl String?
   createdAt     DateTime @default(now())
 
