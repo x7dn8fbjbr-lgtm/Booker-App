@@ -120,10 +120,20 @@ export default async function VenueDetailPage({ params, searchParams }: Props) {
       )}
 
       {activeTab === "bookings" && (
-        <EmptyState
-          title="Noch keine Bookings"
-          description="Bookings werden in Phase 3 implementiert."
-        />
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <Link
+              href={`/bookings/new?venueId=${id}`}
+              className="inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+            >
+              Booking anlegen
+            </Link>
+          </div>
+          <EmptyState
+            title="Noch keine Bookings"
+            description="Lege das erste Booking für diese Venue an."
+          />
+        </div>
       )}
     </div>
   )
