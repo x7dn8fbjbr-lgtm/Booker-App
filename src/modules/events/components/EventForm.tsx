@@ -6,6 +6,7 @@ import type { EventFormState } from "../actions/event.actions"
 import type { Venue } from "@prisma/client"
 
 interface StageInput {
+  id: string
   name: string
   color: string
   order: number
@@ -37,18 +38,18 @@ const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => `${i.toString().padSta
 export function EventForm({ action, venues, defaultValues, showStages = true, deleteAction }: Props) {
   const [state, formAction, isPending] = useActionState(action, {})
   const [stages, setStages] = useState<StageInput[]>(
-    showStages ? [{ name: "", color: "#6366f1", order: 0 }] : []
+    showStages ? [{ id: crypto.randomUUID(), name: "", color: "#6366f1", order: 0 }] : []
   )
 
   function addStage() {
-    setStages((prev) => [...prev, { name: "", color: "#6366f1", order: prev.length }])
+    setStages((prev) => [...prev, { id: crypto.randomUUID(), name: "", color: "#6366f1", order: prev.length }])
   }
 
   function removeStage(i: number) {
     setStages((prev) => prev.filter((_, idx) => idx !== i))
   }
 
-  function updateStage(i: number, field: keyof StageInput, value: string | number) {
+  function updateStage(i: number, field: "name" | "color" | "order", value: string | number) {
     setStages((prev) => prev.map((s, idx) => (idx === i ? { ...s, [field]: value } : s)))
   }
 
@@ -59,7 +60,7 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
     <div className="flex flex-col gap-6 max-w-2xl">
       <form action={formAction} className="flex flex-col gap-6">
         {showStages && (
-          <input type="hidden" name="stagesJson" value={JSON.stringify(stages)} />
+          <input type="hidden" name="stagesJson" value={JSON.stringify(stages.map(({ id: _, ...s }) => s))} />
         )}
 
         {state.message && (
@@ -70,8 +71,8 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
 
         {/* Name */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">Name *</label>
-          <input name="name" defaultValue={defaultValues?.name} className={inputCls} />
+          <label htmlFor="name" className="text-sm font-medium text-slate-700">Name *</label>
+          <input id="name" name="name" defaultValue={defaultValues?.name} className={inputCls} />
           {state.errors?.name && (
             <p className="text-xs text-red-600">{state.errors.name[0]}</p>
           )}
@@ -79,8 +80,8 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
 
         {/* Venue */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">Venue *</label>
-          <select name="venueId" defaultValue={defaultValues?.venueId ?? ""} className={inputCls}>
+          <label htmlFor="venueId" className="text-sm font-medium text-slate-700">Venue *</label>
+          <select id="venueId" name="venueId" defaultValue={defaultValues?.venueId ?? ""} className={inputCls}>
             <option value="">Venue wählen…</option>
             {venues.map((v) => (
               <option key={v.id} value={v.id}>
@@ -96,8 +97,9 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
 
         {/* Datum */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">Datum *</label>
+          <label htmlFor="date" className="text-sm font-medium text-slate-700">Datum *</label>
           <input
+            id="date"
             type="date"
             name="date"
             defaultValue={defaultValues?.date}
@@ -111,22 +113,24 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
         {/* Raster-Einstellungen */}
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700">Raster</label>
+            <label htmlFor="gridInterval" className="text-sm font-medium text-slate-700">Raster</label>
             <select
+              id="gridInterval"
               name="gridInterval"
-              defaultValue={defaultValues?.gridInterval ?? 30}
+              defaultValue={String(defaultValues?.gridInterval ?? 30)}
               className={inputCls}
             >
               {INTERVAL_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
+                <option key={o.value} value={String(o.value)}>
                   {o.label}
                 </option>
               ))}
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700">Startzeit</label>
+            <label htmlFor="startTime" className="text-sm font-medium text-slate-700">Startzeit</label>
             <select
+              id="startTime"
               name="startTime"
               defaultValue={defaultValues?.startTime ?? "14:00"}
               className={inputCls}
@@ -139,8 +143,9 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700">Endzeit</label>
+            <label htmlFor="endTime" className="text-sm font-medium text-slate-700">Endzeit</label>
             <select
+              id="endTime"
               name="endTime"
               defaultValue={defaultValues?.endTime ?? "22:00"}
               className={inputCls}
@@ -175,7 +180,7 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
             )}
             {stages.map((stage, i) => (
               <div
-                key={i}
+                key={stage.id}
                 className="flex items-center gap-3 rounded-md border border-slate-200 p-3"
               >
                 <input
