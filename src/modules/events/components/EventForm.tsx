@@ -60,7 +60,7 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
     <div className="flex flex-col gap-6 max-w-2xl">
       <form action={formAction} className="flex flex-col gap-6">
         {showStages && (
-          <input type="hidden" name="stagesJson" value={JSON.stringify(stages.map(({ id: _, ...s }) => s))} />
+          <input type="hidden" name="stagesJson" value={JSON.stringify(stages.map((s) => ({ name: s.name, color: s.color, order: s.order })))} />
         )}
 
         {state.message && (
