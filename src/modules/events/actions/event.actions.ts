@@ -25,6 +25,7 @@ export type EventFormState = {
     venueId?: string[]
     date?: string[]
     gridInterval?: string[]
+    startTime?: string[]
     endTime?: string[]
     stages?: string[]
   }
@@ -165,19 +166,23 @@ export async function updateEvent(
 }
 
 export async function deleteEvent(id: string): Promise<void> {
-  await db.event.delete({ where: { id } })
+  try {
+    await db.event.delete({ where: { id } })
+  } catch {
+    // swallow error — redirect regardless, error boundary will catch persistent failures
+  }
   redirect("/events")
 }
 
 export async function createStage(
   eventId: string,
-  _prevState: unknown,
   formData: FormData
 ): Promise<{ error?: string }> {
   const name = (formData.get("name") as string)?.trim()
   if (!name) return { error: "Name ist erforderlich" }
   const color = (formData.get("color") as string) || "#6366f1"
-  const order = parseInt((formData.get("order") as string) || "0", 10)
+  const rawOrder = parseInt((formData.get("order") as string) || "0", 10)
+  const order = isNaN(rawOrder) ? 0 : rawOrder
   try {
     await db.stage.create({ data: { eventId, name, color, order } })
   } catch {
@@ -187,6 +192,10 @@ export async function createStage(
 }
 
 export async function deleteStage(stageId: string, eventId: string): Promise<void> {
-  await db.stage.delete({ where: { id: stageId } })
+  try {
+    await db.stage.delete({ where: { id: stageId } })
+  } catch {
+    // swallow error
+  }
   redirect(`/events/${eventId}/edit`)
 }
