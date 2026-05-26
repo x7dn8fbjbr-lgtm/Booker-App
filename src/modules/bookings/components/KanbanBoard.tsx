@@ -2,7 +2,15 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { DndContext, useDroppable, type DragEndEvent } from "@dnd-kit/core"
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
 import { BookingStatus } from "@prisma/client"
 import { cn } from "@/lib/utils"
 import { BookingCard } from "./BookingCard"
@@ -24,6 +32,11 @@ export function KanbanBoard({ initialBookings }: Props) {
   const [bookings, setBookings] = useState(initialBookings)
   const [error, setError] = useState<string | null>(null)
   const [, startTransition] = useTransition()
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } })
+  )
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -52,7 +65,7 @@ export function KanbanBoard({ initialBookings }: Props) {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       {error && (
         <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}

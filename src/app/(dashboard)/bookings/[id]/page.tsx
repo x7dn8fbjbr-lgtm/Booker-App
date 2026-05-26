@@ -57,17 +57,7 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
   const { id } = await params
   const { tab } = await searchParams
 
-  let booking
-  try {
-    booking = await getBookingById(id)
-  } catch (err) {
-    const msg = err instanceof Error ? `${err.message}\n${err.stack}` : String(err)
-    return (
-      <pre className="p-6 text-xs text-red-700 bg-red-50 overflow-auto whitespace-pre-wrap">
-        {msg}
-      </pre>
-    )
-  }
+  const booking = await getBookingById(id)
   if (!booking) notFound()
 
   const activeTab: Tab = TABS.some((t) => t.value === tab)
