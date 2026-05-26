@@ -113,6 +113,7 @@ model Venue {
   genreTags   String[]
   contacts    ContactPerson[]
   bookings    Booking[]
+  events      Event[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -148,6 +149,7 @@ model Booking {
   documents      Document[]
   tourId         String?
   tour           Tour?              @relation(fields: [tourId], references: [id])
+  slots          Slot[]
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 
@@ -216,12 +218,20 @@ model Tour {
 }
 
 model Event {
-  id      String   @id @default(cuid())
-  name    String
-  date    DateTime
-  venueId String
-  stages  Stage[]
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  date         DateTime
+  venueId      String
+  venue        Venue    @relation(fields: [venueId], references: [id])
+  gridInterval Int      @default(30)
+  startTime    String   @default("14:00")
+  endTime      String   @default("22:00")
+  stages       Stage[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([venueId])
+  @@index([date])
 }
 
 model Stage {
@@ -229,7 +239,11 @@ model Stage {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name    String
+  color   String @default("#6366f1")
+  order   Int    @default(0)
   slots   Slot[]
+
+  @@index([eventId])
 }
 
 model Slot {
@@ -238,8 +252,11 @@ model Slot {
   stage     Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
   startTime DateTime
   endTime   DateTime
-  artistId  String?
-  projectId String?
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+
+  @@index([stageId])
+  @@index([bookingId])
 }
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
