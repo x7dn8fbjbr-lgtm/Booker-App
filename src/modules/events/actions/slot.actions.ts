@@ -1,6 +1,8 @@
 // src/modules/events/actions/slot.actions.ts
 "use server"
+// TODO(offene-frage-1): Add auth check and orgId/userId scoping when multi-user is implemented
 
+import { revalidatePath } from "next/cache"
 import { db } from "@/lib/db"
 import { BookingStatus } from "@prisma/client"
 import type { SlotWithBooking } from "./event.actions"
@@ -22,7 +24,7 @@ export async function createSlot(params: {
     if (!event) return { success: false, message: "Event nicht gefunden" }
 
     const eventDate = new Date(event.date)
-    const dayStart = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate())
+    const dayStart = new Date(Date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate()))
     const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000)
 
     let booking = await db.booking.findFirst({
@@ -56,8 +58,10 @@ export async function createSlot(params: {
       },
     })
 
+    revalidatePath("/events")
     return { success: true, slot }
-  } catch {
+  } catch (error) {
+    console.error("[createSlot]", error)
     return { success: false, message: "Slot konnte nicht gespeichert werden." }
   }
 }
@@ -72,8 +76,10 @@ export async function updateSlotTimes(
       where: { id: slotId },
       data: { startTime: new Date(startTimeISO), endTime: new Date(endTimeISO) },
     })
+    revalidatePath("/events")
     return { success: true }
-  } catch {
+  } catch (error) {
+    console.error("[updateSlotTimes]", error)
     return { success: false, message: "Zeitänderung fehlgeschlagen." }
   }
 }
@@ -83,8 +89,10 @@ export async function deleteSlot(
 ): Promise<{ success: boolean; message?: string }> {
   try {
     await db.slot.delete({ where: { id: slotId } })
+    revalidatePath("/events")
     return { success: true }
-  } catch {
+  } catch (error) {
+    console.error("[deleteSlot]", error)
     return { success: false, message: "Löschen fehlgeschlagen." }
   }
 }
