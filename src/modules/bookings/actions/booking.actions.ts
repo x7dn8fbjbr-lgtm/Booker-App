@@ -193,7 +193,8 @@ export async function updateBookingStatusFormAction(
   _prevState: unknown,
   formData: FormData
 ): Promise<void> {
-  const status = formData.get("status") as BookingStatus
-  await db.booking.update({ where: { id: bookingId }, data: { status } })
+  const parsed = z.nativeEnum(BookingStatus).safeParse(formData.get("status"))
+  if (!parsed.success) return
+  await db.booking.update({ where: { id: bookingId }, data: { status: parsed.data } })
   redirect(`/bookings/${bookingId}?tab=uebersicht`)
 }

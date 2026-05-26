@@ -19,18 +19,18 @@ const NegotiationSchema = z.object({
     .string()
     .optional()
     .transform((v) => (v ? parseFloat(v) : undefined))
-    .pipe(z.number().positive().optional()),
+    .pipe(z.number().min(0).optional()),
   currency: z.string().min(1).default("EUR"),
   travelCosts: z
     .string()
     .optional()
     .transform((v) => (v ? parseFloat(v) : undefined))
-    .pipe(z.number().positive().optional()),
+    .pipe(z.number().min(0).optional()),
   accommodation: z
     .string()
     .optional()
     .transform((v) => (v ? parseFloat(v) : undefined))
-    .pipe(z.number().positive().optional()),
+    .pipe(z.number().min(0).optional()),
   notes: z.string().optional(),
 })
 
