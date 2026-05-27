@@ -79,7 +79,7 @@ export function TourTimeline({ bookings, onRemoveForm }: Props) {
                 <span className="text-xs font-medium shrink-0">
                   {STATUS_LABELS[booking.status]}
                 </span>
-                {onRemoveForm(booking)}
+                <div className="shrink-0">{onRemoveForm(booking)}</div>
               </div>
             ))}
           </div>
