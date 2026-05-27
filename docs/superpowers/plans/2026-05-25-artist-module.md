@@ -1,6 +1,6 @@
 # Artist-Modul (Phase 2 Lean MVP) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Artist-Datenbank mit vollständigem CRUD für Artists und Projekte — Listenansicht, Detailseite mit Tabs, Formulare als eigene Seiten.
 
@@ -36,7 +36,7 @@
 **Files:**
 - Run: `pnpm prisma migrate dev`
 
-- [ ] **Step 1: Migration ausführen**
+- [x] **Step 1: Migration ausführen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -62,7 +62,7 @@ Your database is now in sync with your schema.
 
 > Voraussetzung: `DATABASE_URL` in `.env` ist gesetzt und die PostgreSQL-Datenbank läuft.
 
-- [ ] **Step 2: Prisma Studio kurz prüfen (optional)**
+- [x] **Step 2: Prisma Studio kurz prüfen (optional)**
 
 ```bash
 pnpm db:studio
@@ -70,7 +70,7 @@ pnpm db:studio
 
 Öffnet Browser auf `http://localhost:5555`. Prüfen, ob die Tabellen `Artist`, `Project`, `Note`, `Venue`, `Booking` etc. sichtbar sind. Studio wieder schließen.
 
-- [ ] **Step 3: Verzeichnisstruktur anlegen**
+- [x] **Step 3: Verzeichnisstruktur anlegen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -82,7 +82,7 @@ mkdir -p "src/app/(dashboard)/artists/[id]/projects/new"
 mkdir -p "src/app/(dashboard)/artists/[id]/projects/[projectId]/edit"
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -97,7 +97,7 @@ git commit -m "chore: run initial database migration"
 **Files:**
 - Create: `src/modules/artists/actions/artist.actions.ts`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/actions/artist.actions.ts
@@ -225,7 +225,7 @@ export async function deleteArtist(id: string): Promise<void> {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
@@ -233,7 +233,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 
 Erwartetes Ergebnis: Kein Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -248,7 +248,7 @@ git commit -m "feat: add artist server actions (CRUD)"
 **Files:**
 - Create: `src/modules/artists/actions/project.actions.ts`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/actions/project.actions.ts
@@ -357,7 +357,7 @@ export async function deleteProject(
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
@@ -365,7 +365,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 
 Erwartetes Ergebnis: Kein Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -380,7 +380,7 @@ git commit -m "feat: add project server actions (CRUD)"
 **Files:**
 - Create: `src/modules/artists/components/ArtistTable.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/components/ArtistTable.tsx
@@ -461,7 +461,7 @@ export function ArtistTable({ artists }: ArtistTableProps) {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
@@ -469,7 +469,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 
 Erwartetes Ergebnis: Kein Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -484,7 +484,7 @@ git commit -m "feat: add ArtistTable component"
 **Files:**
 - Create: `src/modules/artists/components/ArtistForm.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/components/ArtistForm.tsx
@@ -586,7 +586,7 @@ export function ArtistForm({
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
@@ -594,7 +594,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 
 Erwartetes Ergebnis: Kein Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -609,7 +609,7 @@ git commit -m "feat: add ArtistForm component"
 **Files:**
 - Create: `src/app/(dashboard)/artists/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/page.tsx
@@ -645,13 +645,13 @@ export default async function ArtistsPage() {
   )
 }
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Seite prüfen**
+- [x] **Step 3: Dev-Server starten und Seite prüfen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -663,7 +663,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -678,7 +678,7 @@ git commit -m "feat: add artist list page"
 **Files:**
 - Create: `src/app/(dashboard)/artists/new/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/new/page.tsx
@@ -703,13 +703,13 @@ export default function NewArtistPage() {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Formular testen**
+- [x] **Step 3: Dev-Server starten und Formular testen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -723,7 +723,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -738,7 +738,7 @@ git commit -m "feat: add artist create page"
 **Files:**
 - Create: `src/app/(dashboard)/artists/[id]/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/[id]/page.tsx
@@ -891,13 +891,13 @@ function InfoRow({
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Seite prüfen**
+- [x] **Step 3: Dev-Server starten und Seite prüfen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -912,7 +912,7 @@ Einen zuvor angelegten Artist anklicken. Prüfen:
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -927,7 +927,7 @@ git commit -m "feat: add artist detail page with tabs"
 **Files:**
 - Create: `src/app/(dashboard)/artists/[id]/edit/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/[id]/edit/page.tsx
@@ -988,13 +988,13 @@ export default async function EditArtistPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Bearbeitung testen**
+- [x] **Step 3: Dev-Server starten und Bearbeitung testen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -1007,7 +1007,7 @@ Artist-Detailseite öffnen → "Bearbeiten" klicken. Prüfen:
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -1022,7 +1022,7 @@ git commit -m "feat: add artist edit page with delete"
 **Files:**
 - Create: `src/modules/artists/components/ProjectList.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/components/ProjectList.tsx
@@ -1088,13 +1088,13 @@ export function ProjectList({ projects, artistId }: ProjectListProps) {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -1109,7 +1109,7 @@ git commit -m "feat: add ProjectList component"
 **Files:**
 - Create: `src/modules/artists/components/ProjectForm.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/artists/components/ProjectForm.tsx
@@ -1209,13 +1209,13 @@ export function ProjectForm({
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -1230,7 +1230,7 @@ git commit -m "feat: add ProjectForm component"
 **Files:**
 - Create: `src/app/(dashboard)/artists/[id]/projects/new/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/[id]/projects/new/page.tsx
@@ -1268,13 +1268,13 @@ export default async function NewProjectPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Formular testen**
+- [x] **Step 3: Dev-Server starten und Formular testen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -1287,7 +1287,7 @@ Artist-Detailseite → Projekte-Tab → "Projekt anlegen". Prüfen:
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -1302,7 +1302,7 @@ git commit -m "feat: add project create page"
 **Files:**
 - Create: `src/app/(dashboard)/artists/[id]/projects/[projectId]/edit/page.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/app/(dashboard)/artists/[id]/projects/[projectId]/edit/page.tsx
@@ -1366,13 +1366,13 @@ export default async function EditProjectPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: TypeScript-Check**
+- [x] **Step 2: TypeScript-Check**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 ```
 
-- [ ] **Step 3: Dev-Server starten und Bearbeitung testen**
+- [x] **Step 3: Dev-Server starten und Bearbeitung testen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -1385,7 +1385,7 @@ Projekt → "Bearbeiten" klicken. Prüfen:
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -1399,7 +1399,7 @@ git commit -m "feat: add project edit page with delete"
 
 **Files:** keine neuen Dateien
 
-- [ ] **Step 1: Vollständige Durchklickstrecke**
+- [x] **Step 1: Vollständige Durchklickstrecke**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm dev
@@ -1419,7 +1419,7 @@ Folgende Schritte manuell durchführen:
 
 Server mit `Ctrl+C` stoppen.
 
-- [ ] **Step 2: Production Build**
+- [x] **Step 2: Production Build**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm build
@@ -1427,7 +1427,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm build
 
 Erwartetes Ergebnis: Build ohne Fehler. Alle Routen in der Route-Übersicht sichtbar.
 
-- [ ] **Step 3: TypeScript-Abschlussprüfung**
+- [x] **Step 3: TypeScript-Abschlussprüfung**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
@@ -1435,7 +1435,7 @@ cd "/Users/detlefhoefer/Developer/Booker App" && pnpm typecheck
 
 Erwartetes Ergebnis: 0 Fehler.
 
-- [ ] **Step 4: Abschluss-Commit**
+- [x] **Step 4: Abschluss-Commit**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"

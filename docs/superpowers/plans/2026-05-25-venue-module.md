@@ -1,6 +1,6 @@
 # Venue-Modul (Phase 2) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Venue-Datenbank mit vollständigem CRUD, Ansprechpartner-Verwaltung und CSV-Import (client-seitiges Parsing mit Vorschau).
 
@@ -57,7 +57,7 @@ Du arbeitest an der Booker App (`/Users/detlefhoefer/Developer/Booker App`), ein
 **Files:**
 - Modify: `prisma/schema.prisma`
 
-- [ ] **Step 1: Ändere `city` von `String` zu `String?` in schema.prisma**
+- [x] **Step 1: Ändere `city` von `String` zu `String?` in schema.prisma**
 
 In `prisma/schema.prisma` (ca. Zeile 108):
 ```prisma
@@ -81,7 +81,7 @@ model Venue {
 }
 ```
 
-- [ ] **Step 2: Migration lokal ausführen**
+- [x] **Step 2: Migration lokal ausführen**
 
 ```bash
 pnpm prisma migrate dev --name make_venue_city_nullable
@@ -89,7 +89,7 @@ pnpm prisma migrate dev --name make_venue_city_nullable
 
 Erwartete Ausgabe: Migration erfolgreich, neue Datei unter `prisma/migrations/XXXX_make_venue_city_nullable/migration.sql`.
 
-- [ ] **Step 3: Migration in Supabase ausführen**
+- [x] **Step 3: Migration in Supabase ausführen**
 
 Öffne Supabase → SQL Editor → New query und führe aus:
 
@@ -99,7 +99,7 @@ ALTER TABLE "Venue" ALTER COLUMN "city" DROP NOT NULL;
 
 Erwartete Ausgabe: "Success. No rows returned."
 
-- [ ] **Step 4: Typecheck**
+- [x] **Step 4: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -107,7 +107,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/migrations/
@@ -121,7 +121,7 @@ git commit -m "feat: make Venue.city nullable for CSV import"
 **Files:**
 - Create: `src/modules/venues/actions/venue.actions.ts`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/venues/actions/venue.actions.ts
@@ -298,7 +298,7 @@ export async function importVenues(rows: ImportRow[]): Promise<{ count: number }
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -306,7 +306,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/venues/actions/venue.actions.ts
@@ -320,7 +320,7 @@ git commit -m "feat: add venue server actions (CRUD + import)"
 **Files:**
 - Create: `src/modules/venues/actions/contact.actions.ts`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/venues/actions/contact.actions.ts
@@ -426,7 +426,7 @@ export async function deleteContact(id: string, venueId: string): Promise<void> 
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -434,7 +434,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/venues/actions/contact.actions.ts
@@ -448,7 +448,7 @@ git commit -m "feat: add contact person server actions (CRUD)"
 **Files:**
 - Create: `src/modules/venues/components/VenueTable.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/venues/components/VenueTable.tsx
@@ -527,7 +527,7 @@ export function VenueTable({ venues }: VenueTableProps) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -535,7 +535,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/venues/components/VenueTable.tsx
@@ -549,7 +549,7 @@ git commit -m "feat: add VenueTable component"
 **Files:**
 - Create: `src/modules/venues/components/VenueForm.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/venues/components/VenueForm.tsx
@@ -675,7 +675,7 @@ export function VenueForm({ action, defaultValues, cancelHref }: VenueFormProps)
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -683,7 +683,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/venues/components/VenueForm.tsx
@@ -698,7 +698,7 @@ git commit -m "feat: add VenueForm component"
 - Create: `src/app/(dashboard)/venues/page.tsx`
 - Create: `src/app/(dashboard)/venues/new/page.tsx`
 
-- [ ] **Step 1: Venue-Liste anlegen**
+- [x] **Step 1: Venue-Liste anlegen**
 
 ```typescript
 // src/app/(dashboard)/venues/page.tsx
@@ -736,7 +736,7 @@ export default async function VenuesPage() {
 }
 ```
 
-- [ ] **Step 2: Anlegen-Seite erstellen**
+- [x] **Step 2: Anlegen-Seite erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/new/page.tsx
@@ -755,7 +755,7 @@ export default function NewVenuePage() {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -763,7 +763,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/\(dashboard\)/venues/
@@ -777,7 +777,7 @@ git commit -m "feat: add venue list and new pages"
 **Files:**
 - Create: `src/app/(dashboard)/venues/[id]/page.tsx`
 
-- [ ] **Step 1: Detailseite erstellen**
+- [x] **Step 1: Detailseite erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/[id]/page.tsx
@@ -934,7 +934,7 @@ function InfoRow({
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -942,7 +942,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler (ContactList ist noch nicht vorhanden — es kann einen Import-Fehler geben. Erst nach Task 9 wird das grün).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add "src/app/(dashboard)/venues/[id]/page.tsx"
@@ -956,7 +956,7 @@ git commit -m "feat: add venue detail page with tabs"
 **Files:**
 - Create: `src/app/(dashboard)/venues/[id]/edit/page.tsx`
 
-- [ ] **Step 1: Bearbeiten-Seite erstellen**
+- [x] **Step 1: Bearbeiten-Seite erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/[id]/edit/page.tsx
@@ -1012,7 +1012,7 @@ export default async function EditVenuePage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1020,7 +1020,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add "src/app/(dashboard)/venues/[id]/edit/page.tsx"
@@ -1035,7 +1035,7 @@ git commit -m "feat: add venue edit page with delete"
 - Create: `src/modules/venues/components/ContactList.tsx`
 - Create: `src/modules/venues/components/ContactForm.tsx`
 
-- [ ] **Step 1: ContactList erstellen**
+- [x] **Step 1: ContactList erstellen**
 
 ```typescript
 // src/modules/venues/components/ContactList.tsx
@@ -1102,7 +1102,7 @@ export function ContactList({ contacts, venueId }: ContactListProps) {
 }
 ```
 
-- [ ] **Step 2: ContactForm erstellen**
+- [x] **Step 2: ContactForm erstellen**
 
 ```typescript
 // src/modules/venues/components/ContactForm.tsx
@@ -1186,7 +1186,7 @@ export function ContactForm({ action, defaultValues, cancelHref }: ContactFormPr
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1194,7 +1194,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/modules/venues/components/ContactList.tsx src/modules/venues/components/ContactForm.tsx
@@ -1209,7 +1209,7 @@ git commit -m "feat: add ContactList and ContactForm components"
 - Create: `src/app/(dashboard)/venues/[id]/contacts/new/page.tsx`
 - Create: `src/app/(dashboard)/venues/[id]/contacts/[contactId]/edit/page.tsx`
 
-- [ ] **Step 1: Neue Ansprechpartner-Seite erstellen**
+- [x] **Step 1: Neue Ansprechpartner-Seite erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/[id]/contacts/new/page.tsx
@@ -1240,7 +1240,7 @@ export default async function NewContactPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Bearbeiten-Seite für Ansprechpartner erstellen**
+- [x] **Step 2: Bearbeiten-Seite für Ansprechpartner erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/[id]/contacts/[contactId]/edit/page.tsx
@@ -1302,7 +1302,7 @@ export default async function EditContactPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1310,7 +1310,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/(dashboard)/venues/[id]/contacts/"
@@ -1324,7 +1324,7 @@ git commit -m "feat: add contact person create and edit pages"
 **Files:**
 - Create: `src/modules/venues/components/CsvImport.tsx`
 
-- [ ] **Step 1: Datei erstellen**
+- [x] **Step 1: Datei erstellen**
 
 ```typescript
 // src/modules/venues/components/CsvImport.tsx
@@ -1542,7 +1542,7 @@ export function CsvImport() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1550,7 +1550,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/venues/components/CsvImport.tsx
@@ -1564,7 +1564,7 @@ git commit -m "feat: add CsvImport component with preview"
 **Files:**
 - Create: `src/app/(dashboard)/venues/import/page.tsx`
 
-- [ ] **Step 1: Import-Seite erstellen**
+- [x] **Step 1: Import-Seite erstellen**
 
 ```typescript
 // src/app/(dashboard)/venues/import/page.tsx
@@ -1587,7 +1587,7 @@ export default function ImportVenuePage() {
 }
 ```
 
-- [ ] **Step 2: Finaler Typecheck**
+- [x] **Step 2: Finaler Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1595,7 +1595,7 @@ pnpm typecheck
 
 Erwartete Ausgabe: keine Fehler.
 
-- [ ] **Step 3: Build**
+- [x] **Step 3: Build**
 
 ```bash
 pnpm build
@@ -1603,14 +1603,14 @@ pnpm build
 
 Erwartete Ausgabe: Build erfolgreich, keine Fehler.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/(dashboard)/venues/import/page.tsx"
 git commit -m "feat: add CSV import page"
 ```
 
-- [ ] **Step 5: Push**
+- [x] **Step 5: Push**
 
 ```bash
 git push

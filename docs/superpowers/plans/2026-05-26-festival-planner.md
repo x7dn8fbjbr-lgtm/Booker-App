@@ -1,6 +1,6 @@
 # Festival-Planer Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Visueller Bühnenplaner für Events mit mehreren Stages, DnD-Zuweisung von Artists, automatischer Booking-Erstellung und Konflikt-Erkennung.
 
@@ -36,7 +36,7 @@
 **Files:**
 - Modify: `prisma/schema.prisma`
 
-- [ ] **Step 1: Schema aktualisieren**
+- [x] **Step 1: Schema aktualisieren**
 
 Ersetze die Modelle `Event`, `Stage`, `Slot` und ergänze Rückrelationen in `Booking` und `Venue`:
 
@@ -107,7 +107,7 @@ In `model Venue` die Rückrelation ergänzen — füge nach `bookings Booking[]`
   events        Event[]
 ```
 
-- [ ] **Step 2: Migration ausführen**
+- [x] **Step 2: Migration ausführen**
 
 ```bash
 cd "/Users/detlefhoefer/Developer/Booker App"
@@ -116,7 +116,7 @@ pnpm prisma migrate dev --name add_festival_planner
 
 Expected: Migration erfolgreich, Prisma Client neu generiert.
 
-- [ ] **Step 3: Supabase-SQL ausführen**
+- [x] **Step 3: Supabase-SQL ausführen**
 
 Im Supabase-Dashboard (SQL-Editor) ausführen:
 
@@ -132,7 +132,7 @@ ALTER TABLE "Slot" DROP COLUMN IF EXISTS "artistId";
 ALTER TABLE "Slot" DROP COLUMN IF EXISTS "projectId";
 ```
 
-- [ ] **Step 4: Typecheck**
+- [x] **Step 4: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -140,7 +140,7 @@ pnpm typecheck
 
 Expected: Keine Fehler.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add prisma/
@@ -154,7 +154,7 @@ git commit -m "feat: add festival planner schema (Event, Stage, Slot with Bookin
 **Files:**
 - Create: `src/modules/events/actions/event.actions.ts`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/actions/event.actions.ts
@@ -351,7 +351,7 @@ export async function deleteStage(stageId: string, eventId: string): Promise<voi
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -359,7 +359,7 @@ pnpm typecheck
 
 Expected: Keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/actions/event.actions.ts
@@ -373,7 +373,7 @@ git commit -m "feat: add event server actions (CRUD + stage management)"
 **Files:**
 - Create: `src/modules/events/actions/slot.actions.ts`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/actions/slot.actions.ts
@@ -468,7 +468,7 @@ export async function deleteSlot(
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -476,7 +476,7 @@ pnpm typecheck
 
 Expected: Keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/actions/slot.actions.ts
@@ -490,7 +490,7 @@ git commit -m "feat: add slot server actions (create, update times, delete)"
 **Files:**
 - Create: `src/modules/events/components/EventForm.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/components/EventForm.tsx
@@ -735,7 +735,7 @@ export function EventForm({ action, venues, defaultValues, showStages = true, de
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -743,7 +743,7 @@ pnpm typecheck
 
 Expected: Keine Fehler.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/components/EventForm.tsx
@@ -757,7 +757,7 @@ git commit -m "feat: add EventForm component with dynamic stage management"
 **Files:**
 - Create: `src/modules/events/components/ArtistSidebar.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/components/ArtistSidebar.tsx
@@ -834,13 +834,13 @@ function ArtistCard({ artist, disabled }: { artist: Artist; disabled: boolean })
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/components/ArtistSidebar.tsx
@@ -854,7 +854,7 @@ git commit -m "feat: add ArtistSidebar with draggable artist cards"
 **Files:**
 - Create: `src/modules/events/components/SlotCard.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/components/SlotCard.tsx
@@ -981,13 +981,13 @@ export function SlotCard({ slot, stageColor, timeSlots, isConflict, eventDate, o
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/components/SlotCard.tsx
@@ -1001,7 +1001,7 @@ git commit -m "feat: add SlotCard with inline time-edit popover"
 **Files:**
 - Create: `src/modules/events/components/StageGrid.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/components/StageGrid.tsx
@@ -1219,13 +1219,13 @@ function GridCell({
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/components/StageGrid.tsx
@@ -1239,7 +1239,7 @@ git commit -m "feat: add StageGrid with time slots, drop zones, rowspan and conf
 **Files:**
 - Create: `src/modules/events/components/FestivalPlanner.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/modules/events/components/FestivalPlanner.tsx
@@ -1384,13 +1384,13 @@ export function FestivalPlanner({ event, artists, initialSlots }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/events/components/FestivalPlanner.tsx
@@ -1404,7 +1404,7 @@ git commit -m "feat: add FestivalPlanner with optimistic DnD and rollback"
 **Files:**
 - Create: `src/app/(dashboard)/events/page.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/app/(dashboard)/events/page.tsx
@@ -1473,13 +1473,13 @@ export default async function EventsPage() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/events/page.tsx
@@ -1494,7 +1494,7 @@ git commit -m "feat: add /events list page"
 - Create: `src/app/(dashboard)/events/new/page.tsx`
 - Create: `src/app/(dashboard)/events/[id]/edit/page.tsx`
 
-- [ ] **Step 1: /events/new anlegen**
+- [x] **Step 1: /events/new anlegen**
 
 ```typescript
 // src/app/(dashboard)/events/new/page.tsx
@@ -1522,7 +1522,7 @@ export default async function NewEventPage() {
 }
 ```
 
-- [ ] **Step 2: /events/[id]/edit anlegen**
+- [x] **Step 2: /events/[id]/edit anlegen**
 
 ```typescript
 // src/app/(dashboard)/events/[id]/edit/page.tsx
@@ -1659,13 +1659,13 @@ export default async function EditEventPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/(dashboard)/events/new/ src/app/(dashboard)/events/[id]/edit/
@@ -1679,7 +1679,7 @@ git commit -m "feat: add /events/new and /events/[id]/edit pages"
 **Files:**
 - Create: `src/app/(dashboard)/events/[id]/page.tsx`
 
-- [ ] **Step 1: Datei anlegen**
+- [x] **Step 1: Datei anlegen**
 
 ```typescript
 // src/app/(dashboard)/events/[id]/page.tsx
@@ -1745,13 +1745,13 @@ export default async function EventPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/events/[id]/page.tsx
@@ -1764,7 +1764,7 @@ git commit -m "feat: add /events/[id] festival planner page"
 
 **Files:** keine neuen Dateien
 
-- [ ] **Step 1: Typecheck**
+- [x] **Step 1: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1772,7 +1772,7 @@ pnpm typecheck
 
 Expected: 0 Fehler.
 
-- [ ] **Step 2: Lint**
+- [x] **Step 2: Lint**
 
 ```bash
 pnpm lint
@@ -1780,7 +1780,7 @@ pnpm lint
 
 Expected: Keine Warnungen oder Fehler.
 
-- [ ] **Step 3: Build**
+- [x] **Step 3: Build**
 
 ```bash
 pnpm build
@@ -1788,20 +1788,20 @@ pnpm build
 
 Expected: Build erfolgreich. Alle Seiten kompiliert.
 
-- [ ] **Step 4: Manuelle Smoke-Tests**
+- [x] **Step 4: Manuelle Smoke-Tests**
 
 Starte den Dev-Server (`pnpm dev`) und prüfe:
 
-- [ ] `/events` lädt ohne Fehler, zeigt „Noch keine Events"
-- [ ] `/events/new` öffnet Formular, Stage kann hinzugefügt werden
-- [ ] Event anlegen → Weiterleitung zu `/events/[id]`
-- [ ] Planer zeigt Sidebar mit Artists und Stage-Raster
-- [ ] Artist per DnD auf Zelle ziehen → Slot erscheint sofort (optimistisch)
-- [ ] Seiten-Reload → Slot noch vorhanden
-- [ ] Klick auf Slot → Popover mit Zeit-Dropdowns
-- [ ] `/events/[id]/edit` → Eventfelder bearbeiten, Stage hinzufügen/löschen
+- [x] `/events` lädt ohne Fehler, zeigt „Noch keine Events"
+- [x] `/events/new` öffnet Formular, Stage kann hinzugefügt werden
+- [x] Event anlegen → Weiterleitung zu `/events/[id]`
+- [x] Planer zeigt Sidebar mit Artists und Stage-Raster
+- [x] Artist per DnD auf Zelle ziehen → Slot erscheint sofort (optimistisch)
+- [x] Seiten-Reload → Slot noch vorhanden
+- [x] Klick auf Slot → Popover mit Zeit-Dropdowns
+- [x] `/events/[id]/edit` → Eventfelder bearbeiten, Stage hinzufügen/löschen
 
-- [ ] **Step 5: Final Commit falls nötig**
+- [x] **Step 5: Final Commit falls nötig**
 
 ```bash
 git add -A

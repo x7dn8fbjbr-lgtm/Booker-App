@@ -1,6 +1,6 @@
 # Booking-CRM (Phase 3) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Implement the Booking-CRM module with a Kanban board (drag & drop), full CRUD, negotiation details, and a communication log with tag filtering.
 
@@ -38,7 +38,7 @@
 **Files:**
 - Modify: `prisma/schema.prisma`
 
-- [ ] **Step 1: Add `contactPerson` to Booking and `tags` to CommunicationLog in schema**
+- [x] **Step 1: Add `contactPerson` to Booking and `tags` to CommunicationLog in schema**
 
 In `prisma/schema.prisma`, update the two models:
 
@@ -82,7 +82,7 @@ model CommunicationLog {
 }
 ```
 
-- [ ] **Step 2: Run local migration**
+- [x] **Step 2: Run local migration**
 
 ```bash
 pnpm prisma migrate dev --name add_booking_contact_and_log_tags
@@ -90,7 +90,7 @@ pnpm prisma migrate dev --name add_booking_contact_and_log_tags
 
 Expected: Migration applied successfully, Prisma client regenerated.
 
-- [ ] **Step 3: Apply migration to Supabase staging**
+- [x] **Step 3: Apply migration to Supabase staging**
 
 Run in the Supabase SQL editor (project: booker-app staging):
 
@@ -99,7 +99,7 @@ ALTER TABLE "Booking" ADD COLUMN "contactPerson" TEXT;
 ALTER TABLE "CommunicationLog" ADD COLUMN "tags" TEXT[] NOT NULL DEFAULT '{}';
 ```
 
-- [ ] **Step 4: Install @dnd-kit packages**
+- [x] **Step 4: Install @dnd-kit packages**
 
 ```bash
 pnpm add @dnd-kit/core @dnd-kit/utilities
@@ -107,7 +107,7 @@ pnpm add @dnd-kit/core @dnd-kit/utilities
 
 Expected: Packages added to `dependencies` in `package.json`.
 
-- [ ] **Step 5: Verify Prisma client has new fields**
+- [x] **Step 5: Verify Prisma client has new fields**
 
 ```bash
 pnpm typecheck
@@ -115,7 +115,7 @@ pnpm typecheck
 
 Expected: No errors. If `Booking` type is missing `contactPerson` or `CommunicationLog` missing `tags`, run `pnpm db:generate` first.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add prisma/ package.json pnpm-lock.yaml
@@ -129,7 +129,7 @@ git commit -m "feat: add booking contactPerson, log tags, install dnd-kit"
 **Files:**
 - Create: `src/modules/bookings/actions/booking.actions.ts`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/actions/booking.actions.ts
@@ -323,7 +323,7 @@ export async function updateBookingStatus(
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -331,7 +331,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/actions/booking.actions.ts
@@ -345,7 +345,7 @@ git commit -m "feat: add booking server actions"
 **Files:**
 - Create: `src/modules/bookings/actions/negotiation.actions.ts`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/actions/negotiation.actions.ts
@@ -428,7 +428,7 @@ export async function upsertNegotiation(
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -436,7 +436,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/actions/negotiation.actions.ts
@@ -450,7 +450,7 @@ git commit -m "feat: add negotiation upsert action"
 **Files:**
 - Create: `src/modules/bookings/actions/log.actions.ts`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/actions/log.actions.ts
@@ -517,7 +517,7 @@ export async function deleteLog(id: string, bookingId: string): Promise<void> {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -525,7 +525,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/actions/log.actions.ts
@@ -539,7 +539,7 @@ git commit -m "feat: add communication log actions"
 **Files:**
 - Create: `src/modules/bookings/components/BookingCard.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/components/BookingCard.tsx
@@ -606,7 +606,7 @@ export function BookingCard({ booking }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -614,7 +614,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/components/BookingCard.tsx
@@ -628,7 +628,7 @@ git commit -m "feat: add BookingCard component"
 **Files:**
 - Create: `src/modules/bookings/components/KanbanBoard.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/components/KanbanBoard.tsx
@@ -739,7 +739,7 @@ function KanbanColumn({
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -747,7 +747,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/components/KanbanBoard.tsx
@@ -761,7 +761,7 @@ git commit -m "feat: add KanbanBoard component with optimistic DnD"
 **Files:**
 - Create: `src/modules/bookings/components/BookingForm.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/components/BookingForm.tsx
@@ -1003,7 +1003,7 @@ export function BookingForm({
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1011,7 +1011,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/components/BookingForm.tsx
@@ -1025,7 +1025,7 @@ git commit -m "feat: add BookingForm with dynamic project loading"
 **Files:**
 - Create: `src/modules/bookings/components/NegotiationForm.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/modules/bookings/components/NegotiationForm.tsx
@@ -1161,7 +1161,7 @@ export function NegotiationForm({ action, negotiation }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1169,7 +1169,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/modules/bookings/components/NegotiationForm.tsx
@@ -1184,7 +1184,7 @@ git commit -m "feat: add NegotiationForm component"
 - Create: `src/modules/bookings/components/CommunicationLog.tsx`
 - Create: `src/modules/bookings/components/LogForm.tsx`
 
-- [ ] **Step 1: Create CommunicationLog.tsx**
+- [x] **Step 1: Create CommunicationLog.tsx**
 
 This is a Client Component to support the tag filter. The delete button uses a bound Server Action inside a `<form>`.
 
@@ -1309,7 +1309,7 @@ export function CommunicationLog({ bookingId, logs }: Props) {
 }
 ```
 
-- [ ] **Step 2: Create LogForm.tsx**
+- [x] **Step 2: Create LogForm.tsx**
 
 ```typescript
 // src/modules/bookings/components/LogForm.tsx
@@ -1400,7 +1400,7 @@ export function LogForm({ action }: Props) {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1408,7 +1408,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/modules/bookings/components/CommunicationLog.tsx src/modules/bookings/components/LogForm.tsx
@@ -1422,7 +1422,7 @@ git commit -m "feat: add CommunicationLog and LogForm components"
 **Files:**
 - Create: `src/app/(dashboard)/bookings/page.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/app/(dashboard)/bookings/page.tsx
@@ -1453,7 +1453,7 @@ export default async function BookingsPage() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1461,7 +1461,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/bookings/page.tsx
@@ -1475,7 +1475,7 @@ git commit -m "feat: add /bookings Kanban page"
 **Files:**
 - Create: `src/app/(dashboard)/bookings/new/page.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 `searchParams` can contain `artistId` and `venueId` for pre-filling. When `artistId` is present the page pre-loads that artist's projects server-side.
 
@@ -1525,7 +1525,7 @@ export default async function NewBookingPage({ searchParams }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1533,7 +1533,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/bookings/new/page.tsx
@@ -1547,7 +1547,7 @@ git commit -m "feat: add /bookings/new page"
 **Files:**
 - Create: `src/app/(dashboard)/bookings/[id]/page.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 Three tabs: Übersicht (with status change), Verhandlung, Kommunikation. StatusForm is a Client Component defined in the same file using `"use client"` — but since the page itself is a Server Component, we define StatusForm in a separate inline section. Because we can't mix `"use server"` and `"use client"` in the same file, the StatusForm is defined in its own component. For simplicity we inline it as a Client Component and keep it in the same file by NOT adding `"use server"` to the page (it's already a Server Component by default).
 
@@ -1805,7 +1805,7 @@ export async function updateBookingStatusFormAction(
 
 Then in the page use `updateBookingStatusFormAction.bind(null, id)` with `useActionState`. This avoids inline Server Actions. **Use this alternative if TypeScript errors appear with the inline approach.**
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1813,7 +1813,7 @@ pnpm typecheck
 
 Expected: No errors. If the inline `"use server"` in JSX causes issues, refactor using the alternative `updateBookingStatusFormAction` approach described above.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/bookings/[id]/page.tsx
@@ -1827,7 +1827,7 @@ git commit -m "feat: add /bookings/[id] detail page with 3 tabs"
 **Files:**
 - Create: `src/app/(dashboard)/bookings/[id]/edit/page.tsx`
 
-- [ ] **Step 1: Create the file**
+- [x] **Step 1: Create the file**
 
 ```typescript
 // src/app/(dashboard)/bookings/[id]/edit/page.tsx
@@ -1905,7 +1905,7 @@ export default async function EditBookingPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -1913,7 +1913,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(dashboard)/bookings/[id]/edit/page.tsx
@@ -1928,7 +1928,7 @@ git commit -m "feat: add /bookings/[id]/edit page"
 - Modify: `src/app/(dashboard)/artists/[id]/page.tsx`
 - Modify: `src/app/(dashboard)/venues/[id]/page.tsx`
 
-- [ ] **Step 1: Update the artist Bookings tab in `artists/[id]/page.tsx`**
+- [x] **Step 1: Update the artist Bookings tab in `artists/[id]/page.tsx`**
 
 Replace the empty Bookings tab content with a link to create a booking pre-filled with the artist, and (later) a list of bookings. For now, replace the placeholder `EmptyState` with a booking button:
 
@@ -1983,7 +1983,7 @@ New:
       )}
 ```
 
-- [ ] **Step 2: Update the venue Bookings tab in `venues/[id]/page.tsx`**
+- [x] **Step 2: Update the venue Bookings tab in `venues/[id]/page.tsx`**
 
 The exact lines to replace in `src/app/(dashboard)/venues/[id]/page.tsx` (around line 122–126):
 
@@ -2017,7 +2017,7 @@ New:
       )}
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 pnpm typecheck
@@ -2025,7 +2025,7 @@ pnpm typecheck
 
 Expected: No errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/(dashboard)/artists/[id]/page.tsx src/app/(dashboard)/venues/[id]/page.tsx
@@ -2036,7 +2036,7 @@ git commit -m "feat: add Booking anlegen buttons to Artist and Venue detail page
 
 ## Task 15: Build verification
 
-- [ ] **Step 1: Run full typecheck**
+- [x] **Step 1: Run full typecheck**
 
 ```bash
 pnpm typecheck
@@ -2044,7 +2044,7 @@ pnpm typecheck
 
 Expected: 0 errors.
 
-- [ ] **Step 2: Run lint**
+- [x] **Step 2: Run lint**
 
 ```bash
 pnpm lint
@@ -2052,7 +2052,7 @@ pnpm lint
 
 Expected: 0 errors. Fix any reported issues before proceeding.
 
-- [ ] **Step 3: Build**
+- [x] **Step 3: Build**
 
 ```bash
 pnpm build
@@ -2060,7 +2060,7 @@ pnpm build
 
 Expected: Build succeeds without errors. If Prisma client is stale, run `pnpm db:generate` first.
 
-- [ ] **Step 4: Manual smoke test (dev server)**
+- [x] **Step 4: Manual smoke test (dev server)**
 
 ```bash
 pnpm dev
@@ -2076,7 +2076,7 @@ Test each flow:
 7. `/artists/[id]?tab=bookings` — "Booking anlegen" button links to `/bookings/new?artistId=…`
 8. `/venues/[id]?tab=bookings` — "Booking anlegen" button links to `/bookings/new?venueId=…`
 
-- [ ] **Step 5: Final commit**
+- [x] **Step 5: Final commit**
 
 ```bash
 git add -A
