@@ -68,6 +68,7 @@ model Artist {
   notes     Note[]
   projects  Project[]
   bookings  Booking[]
+  tours     Tour[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -210,11 +211,14 @@ model Tour {
   id        String    @id @default(cuid())
   name      String
   artistId  String
+  artist    Artist    @relation(fields: [artistId], references: [id])
   startDate DateTime
   endDate   DateTime
   bookings  Booking[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@index([artistId])
 }
 
 model Event {
