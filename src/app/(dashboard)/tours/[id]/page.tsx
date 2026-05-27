@@ -31,6 +31,7 @@ export default async function TourDetailPage({ params }: Props) {
   async function removeAction(formData: FormData) {
     "use server"
     const bookingId = formData.get("bookingId") as string
+    if (!bookingId) return
     await removeBookingFromTour(id, bookingId)
   }
 

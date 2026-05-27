@@ -1,6 +1,6 @@
 // src/app/(dashboard)/tours/[id]/ical/route.ts
 import { NextResponse } from "next/server"
-import { format } from "date-fns"
+import { format, addDays } from "date-fns"
 import { getTourById } from "@/modules/tours/actions/tour.actions"
 
 function toICalDate(date: Date): string {
@@ -31,7 +31,7 @@ export async function GET(
       "BEGIN:VEVENT",
       `UID:${booking.id}@booker-app`,
       `DTSTART;VALUE=DATE:${dateStr}`,
-      `DTEND;VALUE=DATE:${dateStr}`,
+      `DTEND;VALUE=DATE:${toICalDate(addDays(new Date(booking.date), 1))}`,
       `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
       "END:VEVENT",
