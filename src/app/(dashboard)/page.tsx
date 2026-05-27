@@ -1,20 +1,31 @@
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { db } from "@/lib/db"
+import { BookingStatus } from "@prisma/client"
 
 const quickLinks = [
   { label: "Artist anlegen", href: "/artists/new", description: "Neuen Künstler in die Datenbank aufnehmen" },
   { label: "Venue anlegen", href: "/venues/new", description: "Neue Spielstätte hinzufügen" },
   { label: "Booking anlegen", href: "/bookings/new", description: "Neuen Buchungsvorgang starten" },
-];
+]
 
-const stats = [
-  { label: "Artists", value: "–", href: "/artists" },
-  { label: "Venues", value: "–", href: "/venues" },
-  { label: "Offene Bookings", value: "–", href: "/bookings" },
-  { label: "Bestätigte Bookings", value: "–", href: "/bookings" },
-];
+export default async function DashboardPage() {
+  const [artistCount, venueCount, openBookingCount, confirmedBookingCount] = await Promise.all([
+    db.artist.count(),
+    db.venue.count(),
+    db.booking.count({
+      where: { status: { in: [BookingStatus.ERSTKONTAKT, BookingStatus.IN_VERHANDLUNG] } },
+    }),
+    db.booking.count({ where: { status: BookingStatus.BESTAETIGT } }),
+  ])
 
-export default function DashboardPage() {
+  const stats = [
+    { label: "Artists", value: artistCount, href: "/artists" },
+    { label: "Venues", value: venueCount, href: "/venues" },
+    { label: "Offene Bookings", value: openBookingCount, href: "/bookings" },
+    { label: "Bestätigte Bookings", value: confirmedBookingCount, href: "/bookings" },
+  ]
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -52,5 +63,5 @@ export default function DashboardPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }
