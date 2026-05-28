@@ -10,7 +10,7 @@ export default async function ArtistsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Artists</h2>
           <p className="mt-0.5 text-sm text-slate-500">

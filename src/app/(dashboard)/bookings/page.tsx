@@ -9,7 +9,7 @@ export default async function BookingsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-semibold text-slate-900">Bookings</h2>
         <Link
           href="/bookings/new"

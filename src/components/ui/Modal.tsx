@@ -24,7 +24,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
         className="absolute inset-0 bg-black/40"
         onClick={onClose}
@@ -32,7 +32,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
       />
       <div
         className={cn(
-          "relative z-10 w-full max-w-lg rounded-lg bg-white shadow-xl",
+          "relative z-10 w-full max-h-[90dvh] overflow-y-auto rounded-t-xl bg-white shadow-xl sm:max-w-lg sm:rounded-lg",
           className
         )}
         role="dialog"

@@ -10,7 +10,7 @@ export default async function ToursPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-semibold text-slate-900">Touren</h2>
         <Link
           href="/tours/new"
