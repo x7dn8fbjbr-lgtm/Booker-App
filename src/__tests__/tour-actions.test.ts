@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 
 vi.mock("next-auth", () => ({ getServerSession: vi.fn() }))
 vi.mock("next/navigation", () => ({ redirect: vi.fn() }))
-vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn() }))
 vi.mock("@/lib/auth", () => ({ authOptions: {} }))
 vi.mock("@/lib/db", () => ({
   db: {

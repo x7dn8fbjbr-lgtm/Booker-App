@@ -1,6 +1,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
@@ -125,6 +126,7 @@ export async function createVenue(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/venues")
   redirect(`/venues/${venueId}`)
 }
 
@@ -162,6 +164,8 @@ export async function updateVenue(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/venues")
+  revalidatePath(`/venues/${id}`)
   redirect(`/venues/${id}`)
 }
 
@@ -169,6 +173,7 @@ export async function deleteVenue(id: string): Promise<void> {
   const session = await getServerSession(authOptions)
   if (!session) { redirect("/login"); return }
   await db.venue.delete({ where: { id } })
+  revalidatePath("/venues")
   redirect("/venues")
 }
 

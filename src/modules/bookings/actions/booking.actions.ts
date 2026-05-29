@@ -2,6 +2,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
@@ -150,6 +151,8 @@ export async function createBooking(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/bookings")
+  revalidatePath("/")
   redirect(`/bookings/${bookingId}`)
 }
 
@@ -182,6 +185,9 @@ export async function updateBooking(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/bookings")
+  revalidatePath(`/bookings/${id}`)
+  revalidatePath("/")
   redirect(`/bookings/${id}`)
 }
 
@@ -189,6 +195,8 @@ export async function deleteBooking(id: string): Promise<void> {
   const session = await getServerSession(authOptions)
   if (!session) { redirect("/login"); return }
   await db.booking.delete({ where: { id } })
+  revalidatePath("/bookings")
+  revalidatePath("/")
   redirect("/bookings")
 }
 
@@ -200,6 +208,8 @@ export async function updateBookingStatus(
   if (!session) return { success: false, message: "Nicht autorisiert." }
   try {
     await db.booking.update({ where: { id }, data: { status } })
+    revalidatePath("/bookings")
+    revalidatePath("/")
     return { success: true }
   } catch {
     return { success: false, message: "Status konnte nicht gespeichert werden." }

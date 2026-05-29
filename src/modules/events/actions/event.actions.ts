@@ -2,6 +2,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { db } from "@/lib/db"
 import type { Event, Venue, Stage, Booking, Artist, Project, Slot } from "@prisma/client"
@@ -136,6 +137,7 @@ export async function createEvent(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/events")
   redirect(`/events/${eventId}`)
 }
 
@@ -172,6 +174,8 @@ export async function updateEvent(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/events")
+  revalidatePath(`/events/${id}`)
   redirect(`/events/${id}`)
 }
 
@@ -181,6 +185,7 @@ export async function deleteEvent(id: string): Promise<void> {
   } catch {
     // swallow error — redirect regardless, error boundary will catch persistent failures
   }
+  revalidatePath("/events")
   redirect("/events")
 }
 

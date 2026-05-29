@@ -4,6 +4,7 @@
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { getServerSession } from "next-auth"
+
 import { z } from "zod"
 import { db } from "@/lib/db"
 import { authOptions } from "@/lib/auth"
@@ -120,6 +121,7 @@ export async function createTour(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/tours")
   redirect(`/tours/${tourId}`)
 }
 
@@ -153,6 +155,8 @@ export async function updateTour(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/tours")
+  revalidatePath(`/tours/${id}`)
   redirect(`/tours/${id}`)
 }
 
@@ -160,6 +164,7 @@ export async function deleteTour(id: string): Promise<void> {
   const session = await getServerSession(authOptions)
   if (!session) { redirect("/login"); return }
   await db.tour.delete({ where: { id } })
+  revalidatePath("/tours")
   redirect("/tours")
 }
 

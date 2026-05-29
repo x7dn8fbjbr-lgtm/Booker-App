@@ -1,6 +1,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { db } from "@/lib/db"
 
@@ -57,6 +58,7 @@ export async function createContact(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath(`/venues/${venueId}`)
   redirect(`/venues/${venueId}?tab=ansprechpartner`)
 }
 
@@ -91,10 +93,12 @@ export async function updateContact(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath(`/venues/${venueId}`)
   redirect(`/venues/${venueId}?tab=ansprechpartner`)
 }
 
 export async function deleteContact(id: string, venueId: string): Promise<void> {
   await db.contactPerson.delete({ where: { id } })
+  revalidatePath(`/venues/${venueId}`)
   redirect(`/venues/${venueId}?tab=ansprechpartner`)
 }

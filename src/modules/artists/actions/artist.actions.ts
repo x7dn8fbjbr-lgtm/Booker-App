@@ -2,6 +2,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
@@ -95,6 +96,7 @@ export async function createArtist(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/artists")
   redirect(`/artists/${artistId}`)
 }
 
@@ -125,6 +127,8 @@ export async function updateArtist(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath("/artists")
+  revalidatePath(`/artists/${id}`)
   redirect(`/artists/${id}`)
 }
 
@@ -132,5 +136,6 @@ export async function deleteArtist(id: string): Promise<void> {
   const session = await getServerSession(authOptions)
   if (!session) { redirect("/login"); return }
   await db.artist.delete({ where: { id } })
+  revalidatePath("/artists")
   redirect("/artists")
 }

@@ -2,6 +2,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { db } from "@/lib/db"
 
@@ -58,6 +59,7 @@ export async function createProject(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath(`/artists/${artistId}`)
   redirect(`/artists/${artistId}?tab=projekte`)
 }
 
@@ -92,6 +94,7 @@ export async function updateProject(
     return { message: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
   }
 
+  revalidatePath(`/artists/${artistId}`)
   redirect(`/artists/${artistId}?tab=projekte`)
 }
 
@@ -100,5 +103,6 @@ export async function deleteProject(
   artistId: string
 ): Promise<void> {
   await db.project.delete({ where: { id } })
+  revalidatePath(`/artists/${artistId}`)
   redirect(`/artists/${artistId}?tab=projekte`)
 }

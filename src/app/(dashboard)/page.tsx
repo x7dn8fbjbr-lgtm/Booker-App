@@ -3,6 +3,9 @@ import { format } from "date-fns"
 import { de } from "date-fns/locale"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { db } from "@/lib/db"
+
+// Immer frisch rendern — Seite filtert nach new Date() für "Nächste Bookings"
+export const dynamic = "force-dynamic"
 import { BookingStatus } from "@prisma/client"
 
 const quickLinks = [

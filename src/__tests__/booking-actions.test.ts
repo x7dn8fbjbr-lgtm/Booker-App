@@ -10,6 +10,10 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }))
 
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}))
+
 vi.mock("@/lib/auth", () => ({
   authOptions: {},
 }))
