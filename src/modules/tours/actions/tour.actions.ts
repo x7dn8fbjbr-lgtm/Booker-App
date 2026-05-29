@@ -3,8 +3,10 @@
 
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 import type { Tour, Artist, Booking, Venue, Project } from "@prisma/client"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -78,12 +80,23 @@ export async function getAvailableBookingsForTour(
   })
 }
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+async function requireSession(): Promise<{ message: string } | null> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+  return null
+}
+
 // ─── Mutations ───────────────────────────────────────────────────────────────
 
 export async function createTour(
   prevState: TourFormState,
   formData: FormData
 ): Promise<TourFormState> {
+  const authError = await requireSession()
+  if (authError) return authError
+
   const result = TourSchema.safeParse({
     name: (formData.get("name") as string) ?? "",
     artistId: (formData.get("artistId") as string) ?? "",
@@ -115,6 +128,9 @@ export async function updateTour(
   prevState: TourFormState,
   formData: FormData
 ): Promise<TourFormState> {
+  const authError = await requireSession()
+  if (authError) return authError
+
   const result = TourSchema.safeParse({
     name: (formData.get("name") as string) ?? "",
     artistId: (formData.get("artistId") as string) ?? "",
@@ -141,6 +157,8 @@ export async function updateTour(
 }
 
 export async function deleteTour(id: string): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session) { redirect("/login"); return }
   await db.tour.delete({ where: { id } })
   redirect("/tours")
 }

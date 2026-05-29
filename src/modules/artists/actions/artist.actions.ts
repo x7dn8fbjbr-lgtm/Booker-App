@@ -2,8 +2,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 import type { Artist, Project } from "@prisma/client"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -26,6 +28,23 @@ const ArtistSchema = z.object({
   phone: z.string().optional(),
   website: z.string().url("Ungültige URL").optional(),
 })
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function parseArtistFormData(formData: FormData) {
+  return {
+    name: (formData.get("name") as string | null) ?? "",
+    email: (formData.get("email") as string) || undefined,
+    phone: (formData.get("phone") as string) || undefined,
+    website: (formData.get("website") as string) || undefined,
+  }
+}
+
+async function requireSession(): Promise<{ message: string } | null> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+  return null
+}
 
 // ─── Queries ─────────────────────────────────────────────────────────────────
 
@@ -53,13 +72,10 @@ export async function createArtist(
   prevState: ArtistFormState,
   formData: FormData
 ): Promise<ArtistFormState> {
-  const result = ArtistSchema.safeParse({
-    name: (formData.get("name") as string | null) ?? "",
-    email: (formData.get("email") as string) || undefined,
-    phone: (formData.get("phone") as string) || undefined,
-    website: (formData.get("website") as string) || undefined,
-  })
+  const authError = await requireSession()
+  if (authError) return authError
 
+  const result = ArtistSchema.safeParse(parseArtistFormData(formData))
   if (!result.success) {
     return { errors: result.error.flatten().fieldErrors }
   }
@@ -87,13 +103,10 @@ export async function updateArtist(
   prevState: ArtistFormState,
   formData: FormData
 ): Promise<ArtistFormState> {
-  const result = ArtistSchema.safeParse({
-    name: (formData.get("name") as string | null) ?? "",
-    email: (formData.get("email") as string) || undefined,
-    phone: (formData.get("phone") as string) || undefined,
-    website: (formData.get("website") as string) || undefined,
-  })
+  const authError = await requireSession()
+  if (authError) return authError
 
+  const result = ArtistSchema.safeParse(parseArtistFormData(formData))
   if (!result.success) {
     return { errors: result.error.flatten().fieldErrors }
   }
@@ -116,8 +129,8 @@ export async function updateArtist(
 }
 
 export async function deleteArtist(id: string): Promise<void> {
-  // Hinweis: Wenn in Phase 4 Bookings existieren, wirft Prisma einen FK-Fehler.
-  // Fehlerbehandlung für diesen Fall wird in Phase 4 nachgerüstet.
+  const session = await getServerSession(authOptions)
+  if (!session) { redirect("/login"); return }
   await db.artist.delete({ where: { id } })
   redirect("/artists")
 }

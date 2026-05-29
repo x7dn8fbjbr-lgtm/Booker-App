@@ -2,8 +2,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 
 export type LogFormState = {
   errors?: {
@@ -23,6 +25,9 @@ export async function createLog(
   prevState: LogFormState,
   formData: FormData
 ): Promise<LogFormState> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+
   const result = LogSchema.safeParse({
     body: (formData.get("body") as string | null) ?? "",
     contactPerson: (formData.get("contactPerson") as string) || undefined,
@@ -57,6 +62,8 @@ export async function createLog(
 }
 
 export async function deleteLog(id: string, bookingId: string): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session) { redirect("/login"); return }
   await db.communicationLog.delete({ where: { id } })
   redirect(`/bookings/${bookingId}?tab=kommunikation`)
 }

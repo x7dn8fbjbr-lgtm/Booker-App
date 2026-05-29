@@ -1,8 +1,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 import { VenueType } from "@prisma/client"
 import type { Venue, ContactPerson } from "@prisma/client"
 
@@ -63,6 +65,12 @@ export async function getVenueById(
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+async function requireSession(): Promise<{ message: string } | null> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+  return null
+}
+
 function parseGenreTags(raw: string | undefined): string[] {
   if (!raw) return []
   return raw.split(",").map((t) => t.trim()).filter(Boolean)
@@ -87,6 +95,9 @@ export async function createVenue(
   prevState: VenueFormState,
   formData: FormData
 ): Promise<VenueFormState> {
+  const authError = await requireSession()
+  if (authError) return authError
+
   const result = VenueSchema.safeParse(parseFormData(formData))
 
   if (!result.success) {
@@ -122,6 +133,9 @@ export async function updateVenue(
   prevState: VenueFormState,
   formData: FormData
 ): Promise<VenueFormState> {
+  const authError = await requireSession()
+  if (authError) return authError
+
   const result = VenueSchema.safeParse(parseFormData(formData))
 
   if (!result.success) {
@@ -152,6 +166,8 @@ export async function updateVenue(
 }
 
 export async function deleteVenue(id: string): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session) { redirect("/login"); return }
   await db.venue.delete({ where: { id } })
   redirect("/venues")
 }

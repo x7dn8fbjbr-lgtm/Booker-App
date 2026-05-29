@@ -2,8 +2,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 import { BookingStatus } from "@prisma/client"
 import type {
   Booking,
@@ -51,11 +53,30 @@ const BookingSchema = z.object({
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+// Always construct as UTC — CLAUDE.md: "Alle Datumsangaben als UTC speichern"
 function buildDateTime(dateStr: string, timeStr?: string): Date {
   if (timeStr) {
-    return new Date(`${dateStr}T${timeStr}:00`)
+    return new Date(`${dateStr}T${timeStr}:00Z`)
   }
-  return new Date(dateStr)
+  return new Date(`${dateStr}T00:00:00Z`)
+}
+
+function parseBookingFormData(formData: FormData) {
+  return {
+    artistId: (formData.get("artistId") as string | null) ?? "",
+    projectId: (formData.get("projectId") as string) || undefined,
+    venueId: (formData.get("venueId") as string | null) ?? "",
+    date: (formData.get("date") as string | null) ?? "",
+    time: (formData.get("time") as string) || undefined,
+    status: (formData.get("status") as string) || "ERSTKONTAKT",
+    contactPerson: (formData.get("contactPerson") as string) || undefined,
+  }
+}
+
+async function requireSession(): Promise<{ message: string } | null> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+  return null
 }
 
 // ─── Queries ─────────────────────────────────────────────────────────────────
@@ -104,16 +125,10 @@ export async function createBooking(
   prevState: BookingFormState,
   formData: FormData
 ): Promise<BookingFormState> {
-  const result = BookingSchema.safeParse({
-    artistId: (formData.get("artistId") as string | null) ?? "",
-    projectId: (formData.get("projectId") as string) || undefined,
-    venueId: (formData.get("venueId") as string | null) ?? "",
-    date: (formData.get("date") as string | null) ?? "",
-    time: (formData.get("time") as string) || undefined,
-    status: (formData.get("status") as string) || "ERSTKONTAKT",
-    contactPerson: (formData.get("contactPerson") as string) || undefined,
-  })
+  const authError = await requireSession()
+  if (authError) return authError
 
+  const result = BookingSchema.safeParse(parseBookingFormData(formData))
   if (!result.success) {
     return { errors: result.error.flatten().fieldErrors }
   }
@@ -143,16 +158,10 @@ export async function updateBooking(
   prevState: BookingFormState,
   formData: FormData
 ): Promise<BookingFormState> {
-  const result = BookingSchema.safeParse({
-    artistId: (formData.get("artistId") as string | null) ?? "",
-    projectId: (formData.get("projectId") as string) || undefined,
-    venueId: (formData.get("venueId") as string | null) ?? "",
-    date: (formData.get("date") as string | null) ?? "",
-    time: (formData.get("time") as string) || undefined,
-    status: (formData.get("status") as string) || "ERSTKONTAKT",
-    contactPerson: (formData.get("contactPerson") as string) || undefined,
-  })
+  const authError = await requireSession()
+  if (authError) return authError
 
+  const result = BookingSchema.safeParse(parseBookingFormData(formData))
   if (!result.success) {
     return { errors: result.error.flatten().fieldErrors }
   }
@@ -177,6 +186,8 @@ export async function updateBooking(
 }
 
 export async function deleteBooking(id: string): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session) { redirect("/login"); return }
   await db.booking.delete({ where: { id } })
   redirect("/bookings")
 }
@@ -185,6 +196,8 @@ export async function updateBookingStatus(
   id: string,
   status: BookingStatus
 ): Promise<{ success: boolean; message?: string }> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { success: false, message: "Nicht autorisiert." }
   try {
     await db.booking.update({ where: { id }, data: { status } })
     return { success: true }
@@ -198,6 +211,8 @@ export async function updateBookingStatusFormAction(
   _prevState: unknown,
   formData: FormData
 ): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session) redirect("/login")
   const parsed = z.nativeEnum(BookingStatus).safeParse(formData.get("status"))
   if (!parsed.success) return
   await db.booking.update({ where: { id: bookingId }, data: { status: parsed.data } })

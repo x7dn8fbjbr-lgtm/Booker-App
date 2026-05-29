@@ -2,8 +2,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { authOptions } from "@/lib/auth"
 
 export type NegotiationFormState = {
   errors?: {
@@ -39,6 +41,9 @@ export async function upsertNegotiation(
   prevState: NegotiationFormState,
   formData: FormData
 ): Promise<NegotiationFormState> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { message: "Nicht autorisiert." }
+
   const result = NegotiationSchema.safeParse({
     fee: (formData.get("fee") as string) || undefined,
     currency: (formData.get("currency") as string) || "EUR",
