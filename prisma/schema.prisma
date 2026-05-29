@@ -158,6 +158,7 @@ model Booking {
   @@index([venueId])
   @@index([status])
   @@index([date])
+  @@index([status, date])
 }
 
 model NegotiationDetail {
